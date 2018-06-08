@@ -10,7 +10,7 @@
 
     <main>
       <div id="addTask">
-        <Button @click="addTask" class="addTask" v-show="!add">
+        <Button @click="addTask" v-show="!add">
           <Icon type="plus"></Icon> Add Task
         </Button>
       </div>
@@ -204,7 +204,7 @@ ul li:hover {
   z-index: 0;
   position:relative;
 }
-.addTask {
+#addTask button {
   width: 100%;
   background: #FFFFFF;
   border: 2px solid #C8C8C8;

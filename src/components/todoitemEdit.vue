@@ -178,7 +178,7 @@
   }
 </script>
 <style >
-section {
+#todoitem section {
   width: 700px;
   /* height: 70px; */
   margin: 0 auto 5px;
