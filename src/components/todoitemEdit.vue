@@ -119,11 +119,6 @@
       this.updateNotice(this.Item)
       this.init()
     },
-    watch: {
-      'Item.complete': function() {
-        this.$emit('putTodoItem',this.Item.id, this.Item)
-      }
-    },
     methods: {
       init() {
         this.newItem = { ...this.Item }
@@ -142,7 +137,6 @@
       setStar() {
         this.Item.star = !this.Item.star
         this.titleClass['todotitle-star'] = this.Item.star
-        this.$emit('putTodoItem',this.Item.id, this.Item)
       },
       setComplete() {},
       editing() {

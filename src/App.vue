@@ -18,7 +18,7 @@
 
 
       <todoitemEdit v-for="(item,index) in filterItemList" :key="item.id" :Item="item" :index="index" draggable="true" 
-        @save="save" @filterItemList="filterItemList" @putTodoItem="putTodoItem"
+        @save="save" @filterItemList="filterItemList"
         @dragover.native.stop="allowDrop($event)" @drop.native.stop="drop($event, item.id)" @dragstart.native="dropStart($event, item.id)"></todoitemEdit>
 
     </main>
@@ -37,6 +37,7 @@ export default {
     return {
       add: false,
       item: {
+        id: 0,
         complete: false,
         star: false,
         edit: true,
@@ -56,8 +57,6 @@ export default {
     let body = document.getElementsByTagName('body')[0]
     body.addEventListener('drop', this.drop)
     body.addEventListener('dragover', this.allowDrop)
-    this.getOrder()
-    this.getTodoItems()
   },
   computed: {
     filterItemList() {
@@ -76,48 +75,6 @@ export default {
     }
   },
   methods: {
-    getOrder() {
-      this.axios.get('http://localhost:3000/order/1').then((res) => {
-        console.log(res)
-        this.order = res.data.order
-        this.sortByOrder()
-      }) 
-    },
-    putOrder() {
-      this.axios.put('http://localhost:3000/order/1', {order:this.order}).then((res) => {
-        console.log(res)
-      })
-    },
-    getTodoItems() {
-      this.axios.get('http://localhost:3000/todoitems/').then((res) => {
-        console.log(res)
-        this.itemList = res.data
-        this.sortByOrder()
-      })
-    },
-    postTodoItem(body) {
-      body.edit = false
-      this.axios.post('http://localhost:3000/todoitems/', body).then((res) => {
-        console.log(res)
-        this.itemList.unshift(res.data)
-        this.order.unshift(res.data.id)
-        this.putOrder()
-      })
-    },
-    putTodoItem(id, body) {
-      body = {...body,edit:false}
-      this.axios.put(`http://localhost:3000/todoitems/${id}`,  body).then((res) => {
-        console.log(res)
-      })
-    },
-
-    sortByOrder() {
-      if(this.itemList.length !== 0 && this.order.length !== 0) {
-        this.itemList = this.order.map(o => {
-          return this.itemList.find(item => item.id === o)
-        })
-      }
-    },
 
     drop(e, id) {
       let originId = e.dataTransfer.getData("id");
@@ -127,7 +84,6 @@ export default {
         if(e.clientY <= 145) {
           arraymove(this.itemList, originIndex, 0)
           arraymove(this.order, originIndex, 0)
-          this.putOrder()
         }
       }
       else {
@@ -135,7 +91,6 @@ export default {
         targetIndex = e.offsetY < 50 ? targetIndex : targetIndex + 1
         arraymove(this.itemList, originIndex, targetIndex)
         arraymove(this.order, originIndex, targetIndex)
-        this.putOrder()
       }
       
       function arraymove(arr, fromIndex, toIndex) {
@@ -178,12 +133,11 @@ export default {
     save(newItem, index) {
       if(index !== undefined) {
         let item = Object.assign(this.itemList[index], newItem)
-        this.putTodoItem(this.itemList[index].id, item)
       }
       else {
         this.add = !this.add
-        let item = {...this.newItem, ...newItem}
-        this.postTodoItem(item)
+        let item = {...this.newItem, ...newItem, id: this.itemList.length}
+        this.itemList.unshift(item)
       }
     }
   }
