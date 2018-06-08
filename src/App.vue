@@ -170,14 +170,14 @@ main {
   background: #4A90E2;
   height: 76px;
 }
-ul {
+#menu {
   width: 700px;
   height: 6.2%;
   margin: auto;
   padding-left: 0px;
   text-align: center;
 }
-ul li{
+#menu li{
   font-family: 'Roboto-Regular';
   font-size: 24px;
   color: #00408B;
@@ -189,7 +189,7 @@ ul li{
   transition: border-bottom 1s ease;
   border-bottom: 6px solid rgba(255, 255, 255, 0);
 }
-ul li:hover {
+#menu li:hover {
   color: #fff;
   cursor: pointer;
 }
